@@ -15,16 +15,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: main 
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0 
+        ref: main
       
-    - name: Set up Nodejs
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '18'
         
     - name: Install dependencies
-      run: npm i
+      run: npm install
 
     - name: Run build
       run: npm run build
@@ -100,4 +101,7 @@ jobs:
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git fetch --unshallow  # Ensure all commit history is available
+        git checkout main
+        git pull origin main  # Ensure the latest commits are available
         yes | head -n 3 | npm run updcl
