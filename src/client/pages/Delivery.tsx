@@ -22,7 +22,7 @@ export const Delivery: React.FC = () => {
           </p>2
           <Image className="w-25 mb-4" />
           <p>
-            Track Your Package with Ease: Stay informed and in control of your
+            Track Your Package with Ease: Stay informed and in control of your21313123132
             delivery with our easy-to-use tracking system. From the moment your
             order is placed to the minute it reaches your home, you can monitor
             its journey in real-time. No more guessing games – know exactly when
