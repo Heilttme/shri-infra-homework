@@ -91,23 +91,3 @@ jobs:
         ${{ steps.commits.outputs.commits }}
         EOF
         )"
-    - name: Install dependencies
-      run: npm install -g conventional-changelog-cli
-
-    - name: Pull Repo
-      run: git pull origin main
-
-    - name: Generate changelog
-      run: conventional-changelog -p angular -i CHANGELOG.md -s
-
-    - name: Commit changes
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add CHANGELOG.md
-        git commit -m 'chore: update changelog'
-
-    - name: Push changes
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
