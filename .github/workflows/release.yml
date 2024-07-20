@@ -91,3 +91,5 @@ jobs:
         ${{ steps.commits.outputs.commits }}
         EOF
         )"
+    - name: Changelog update
+      run: yes | head -n 3 | npm run updcl
