@@ -80,5 +80,14 @@ jobs:
       run: |
         gh issue create \
           --title "Release: ${{ github.run_number }}" \
-          --body "### New Release: ${{ github.run_number }}\n\n**Date:** ${{ steps.release_date.outputs.date }}\n\n**Author:** ${{ steps.release_author.outputs.author }}\n\n**Commits since last release:**\n${{ steps.commits.outputs.commits }}"        
-
+          --body "$(cat <<EOF
+        ### New Release: ${{ github.run_number }}
+        
+        **Date:** ${{ steps.release_date.outputs.date }}
+        
+        **Author:** ${{ steps.release_author.outputs.author }}
+        
+        **Commits since last release:**
+        ${{ steps.commits.outputs.commits }}
+        EOF
+        )"
