@@ -67,7 +67,7 @@ jobs:
     - name: Get the commits since the last release
       id: commits
       run: |
-        latest_tag=$(git describe --tags --abbrev=0 HEAD^ --always)
+        latest_tag=$(git describe --tags --abbrev=0 HEAD --always 2>/dev/null || git describe --tags --abbrev=0 --always)
         echo "Latest tag: $latest_tag"
         
         commits=$(git log $latest_tag..HEAD --pretty=format:"%h - %s (%an)")
