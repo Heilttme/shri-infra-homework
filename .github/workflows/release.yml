@@ -101,7 +101,7 @@ jobs:
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git fetch --unshallow  # Ensure all commit history is available
+        git fetch 
         git checkout main
-        git pull origin main  # Ensure the latest commits are available
+        git pull origin main
         yes | head -n 3 | npm run updcl
