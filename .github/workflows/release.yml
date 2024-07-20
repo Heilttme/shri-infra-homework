@@ -94,6 +94,9 @@ jobs:
     - name: Install dependencies
       run: npm install -g conventional-changelog-cli
 
+    - name: Pull Repo
+      run: git pull origin main
+
     - name: Generate changelog
       run: conventional-changelog -p angular -i CHANGELOG.md -s
 
