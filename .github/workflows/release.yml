@@ -78,4 +78,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh issue create --title "Release: ${{ github.event.release.tag_name }}" --body "### New Release: ${{ github.event.release.tag_name }}\n\n**Date:** ${{ steps.release_date.outputs.date }}\n\n**Author:** ${{ steps.release_author.outputs.author }}\n\n**Commits since last release:**\n${{ steps.commits.outputs.commits }}"
+        gh issue create \
+          --title "Release: ${{ github.run_number }}" \
+          --body "### New Release: ${{ github.run_number }}\n\n**Date:** ${{ steps.release_date.outputs.date }}\n\n**Author:** ${{ steps.release_author.outputs.author }}\n\n**Commits since last release:**\n${{ steps.commits.outputs.commits }}"        
+
