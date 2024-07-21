@@ -29,17 +29,16 @@ jobs:
 
       - name: Connect via ssh and run Docker commands
         uses: appleboy/ssh-action@master
-        env:
-          CR_REGISTRY: crpkb2sscjdrc12okn1d
-          IMAGE_TAG: ${{ github.sha }}
         with:
           host: 51.250.26.170
           username: heilttme
           key: ${{ secrets.KEY }}
           script: |
+            export CR_REGISTRY=crpkb2sscjdrc12okn1d
+            export IMAGE_TAG=${{ github.sha }}
             echo "Logging into Docker registry"
             sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
-            echo "Pulling Docker image"
+            echo "Pulling Docker image cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG"
             sudo docker pull cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
             echo "Listing Docker images"
             sudo docker images
