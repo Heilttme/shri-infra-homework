@@ -37,7 +37,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             export CR_REGISTRY=crpkb2sscjdrc12okn1d
-            export IMAGE_TAG=$LATEST_RELEASE_NAME_latest
+            export IMAGE_TAG=${LATEST_RELEASE_NAME}_latest
             echo "Logging into Docker registry"
             sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
             echo "Pulling Docker image cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG"
