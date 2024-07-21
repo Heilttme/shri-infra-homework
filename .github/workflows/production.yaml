@@ -29,7 +29,7 @@ jobs:
           echo "Latest release name: $latest_release"
           echo "LATEST_RELEASE_NAME=$latest_release" >> $GITHUB_ENV
 
-      - name: Connect via ssh and run Docker commands
+      - name: Connect via SSH and Run Docker Commands
         uses: appleboy/ssh-action@master
         with:
           host: 51.250.26.170
@@ -37,6 +37,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             export CR_REGISTRY=crpkb2sscjdrc12okn1d
+            export LATEST_RELEASE_NAME=${{ env.LATEST_RELEASE_NAME }}
             echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
             export IMAGE_TAG="${LATEST_RELEASE_NAME}_latest"
             echo "Logging into Docker registry"
