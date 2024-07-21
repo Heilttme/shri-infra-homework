@@ -1,5 +1,7 @@
 
 
+## [1.2.10](https://github.com/Heilttme/shri-infra-homework/compare/48...1.2.10) (2024-07-21)
+
 ## [1.2.9](https://github.com/Heilttme/shri-infra-homework/compare/1.2.8...1.2.9) (2024-07-21)
 
 ## [1.2.8](https://github.com/Heilttme/shri-infra-homework/compare/46...1.2.8) (2024-07-21)
