@@ -27,20 +27,20 @@ jobs:
           docker build -t cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
 
-        - name: Connect via ssh
-          uses: appleboy/ssh-action@master
-          with:
-            host: 51.250.26.170
-            usename: heilttme
-            key: ${{ secrets.KEY }}
+      - name: Connect via ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: 51.250.26.170
+          username: heilttme
+          key: ${{ secrets.KEY }}
 
-        - name: Run docker
-          env:
-            YANDEX_KEY: ${{ secrets.YANDEX_KEY }}
-            IMGAE_TAG: ${{ github.sha }}
-            CR_REGISTRY: crpkb2sscjdrc12okn1d
-          run: |
-            sudo docker login --username ouath --password $YANDEX_KEY cr.yandex 
-            sudo docker pull cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
-            sudo docker images
-            sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
+      - name: Run docker
+        env:
+          YANDEX_KEY: ${{ secrets.YANDEX_KEY }}
+          IMAGE_TAG: ${{ github.sha }}
+          CR_REGISTRY: crpkb2sscjdrc12okn1d
+        run: |
+          sudo docker login --username oauth --password $YANDEX_KEY cr.yandex
+          sudo docker pull cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
+          sudo docker images
+          sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
