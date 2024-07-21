@@ -38,14 +38,10 @@ jobs:
           CR_REGISTRY: crpkb2sscjdrc12okn1d
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          LATEST_RELEASE_NAME_LATEST="${LATEST_RELEASE_NAME}_latest"
 
-          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
           docker build -t cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME .
-          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
-          docker build -t cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME_latest .
-          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
+          docker build -t cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME_LATEST .
           
           docker push cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME
-          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
-          docker push cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME_latest
-          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
+          docker push cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME_LATEST
