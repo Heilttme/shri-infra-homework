@@ -22,6 +22,7 @@ jobs:
       - name: Build docker image
         env:
           CR_REGISTRY: crpkb2sscjdrc12okn1d
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IMAGE_TAG: ${{ github.run_number }}
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG .
