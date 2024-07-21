@@ -29,6 +29,9 @@ jobs:
 
       - name: Connect via ssh and run Docker commands
         uses: appleboy/ssh-action@master
+        env:
+          CR_REGISTRY: crpkb2sscjdrc12okn1d
+          IMAGE_TAG: ${{ github.sha }}
         with:
           host: 51.250.26.170
           username: heilttme
