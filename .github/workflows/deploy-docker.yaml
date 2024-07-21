@@ -22,32 +22,9 @@ jobs:
       - name: Build docker image
         env:
           CR_REGISTRY: crpkb2sscjdrc12okn1d
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ github.run_number }}
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG .
+          docker build -t cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG_latest .
           docker push cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
-
-      - name: Connect via ssh and run Docker commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: 51.250.26.170
-          username: heilttme
-          key: ${{ secrets.KEY }}
-          script: |
-            export CR_REGISTRY=crpkb2sscjdrc12okn1d
-            export IMAGE_TAG=${{ github.sha }}
-            echo "Logging into Docker registry"
-            sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
-            echo "Pulling Docker image cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG"
-            sudo docker pull cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
-            echo "Listing Docker images"
-            sudo docker images
-            echo "IMAGE_TAG: $IMAGE_TAG"
-            echo "CR_REGISTRY: $CR_REGISTRY"
-            echo "Running Docker container"
-            sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
-            sleep 10  # Give some time for the container to start
-            echo "Checking running containers"
-            sudo docker ps -a  # Check all containers, including exited ones
-            echo "Fetching logs of the last started container"
-            sudo docker logs $(sudo docker ps -l -q)  # Print logs of the last started container
+          docker push cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG_latest

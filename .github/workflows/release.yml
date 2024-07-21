@@ -93,6 +93,9 @@ jobs:
         
         **Commits since last release:**
         ${{ steps.commits.outputs.commits }}
+
+        **Docker image:**
+        cr.yandex/crpkb2sscjdrc12okn1d/app:${{ github.run_number }}
         EOF
         )"
     - name: Changelog update

@@ -1,0 +1,46 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        description: 'Release notes'
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login Yandex Cloud
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.AUTHORIZED_KEY }} 
+
+      - name: Connect via ssh and run Docker commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: 51.250.26.170
+          username: heilttme
+          key: ${{ secrets.KEY }}
+          script: |
+            export CR_REGISTRY=crpkb2sscjdrc12okn1d
+            export IMAGE_TAG=${{ github.run_number }}_latest
+            echo "Logging into Docker registry"
+            sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
+            echo "Pulling Docker image cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG"
+            sudo docker pull cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
+            echo "Listing Docker images"
+            sudo docker images
+            echo "IMAGE_TAG: $IMAGE_TAG"
+            echo "CR_REGISTRY: $CR_REGISTRY"
+            echo "Running Docker container"
+            sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
+            sleep 10
+            echo "Checking running containers"
+            sudo docker ps -a 
+            echo "Fetching logs of the last started container"
+            sudo docker logs $(sudo docker ps -l -q)  # Print logs of the last started container
