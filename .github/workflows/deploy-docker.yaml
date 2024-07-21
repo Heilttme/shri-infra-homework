@@ -1,32 +1,3 @@
-name: Docker deploy
-
-on:
-  workflow_run:
-    workflows: ["Create Release"]
-    types:
-      - requested
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Login Yandex Cloud
-        id: login-cr
-        uses: yc-actions/yc-cr-login@v1
-        with:
-          yc-sa-json-credentials: ${{ secrets.AUTHORIZED_KEY }} 
-
-      - name: Build docker image
-        env:
-          CR_REGISTRY: crpkb2sscjdrc12okn1d
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG .
-          docker push cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
-
       - name: Connect via ssh and run Docker commands
         uses: appleboy/ssh-action@master
         with:
@@ -34,10 +5,18 @@ jobs:
           username: heilttme
           key: ${{ secrets.KEY }}
           script: |
+            echo "Logging into Docker registry"
             sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
+            echo "Pulling Docker image"
             sudo docker pull cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
+            echo "Listing Docker images"
             sudo docker images
+            echo "IMAGE_TAG: $IMAGE_TAG"
+            echo "CR_REGISTRY: $CR_REGISTRY"
+            echo "Running Docker container"
             sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
             sleep 10  # Give some time for the container to start
+            echo "Checking running containers"
             sudo docker ps -a  # Check all containers, including exited ones
+            echo "Fetching logs of the last started container"
             sudo docker logs $(sudo docker ps -l -q)  # Print logs of the last started container
