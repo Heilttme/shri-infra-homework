@@ -98,6 +98,7 @@ jobs:
         cr.yandex/crpkb2sscjdrc12okn1d/app:${{ github.run_number }}
         EOF
         )"
+        
     - name: Changelog update
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

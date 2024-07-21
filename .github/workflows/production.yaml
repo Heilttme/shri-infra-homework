@@ -55,3 +55,27 @@ jobs:
             sudo docker ps -a 
             echo "Fetching logs of the last started container"
             sudo docker logs $(sudo docker ps -l -q)  # Print logs of the last started container
+      
+      - name: Set up GitHub CLI
+        run: sudo apt-get install gh
+        
+      - name: Get the date of the release
+        id: release_date
+        run: echo "::set-output name=date::$(date -u)"
+
+      - name: Get the author of the release
+        id: release_author
+        run: echo "::set-output name=author::${{ github.actor }}"
+        
+      - name: Create issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Production release" \
+            --body "$(cat <<EOF
+          **Date:** ${{ steps.release_date.outputs.date }}
+          
+          **Author:** ${{ steps.release_author.outputs.author }}
+          EOF
+          )"
