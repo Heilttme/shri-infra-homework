@@ -1,0 +1,46 @@
+name: Docker deploy
+
+on:
+  workflow_run:
+    workflows: ["Create Release"]
+    types:
+      - requested
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login Yandex Cloud
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.AUTHORIZED_KEY }} 
+
+      - name: Build docker image
+        env:
+          CR_REGISTRY: crpkb2sscjdrc12okn1d
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
+
+        - name: Connect via ssh
+          uses: appleboy/ssh-action@master
+          with:
+            host: 51.250.26.170
+            usename: heilttme
+            key: ${{ secrets.KEY }}
+
+        - name: Run docker
+          env:
+            YANDEX_KEY: ${{ secrets.YANDEX_KEY }}
+            IMGAE_TAG: ${{ github.sha }}
+            CR_REGISTRY: crpkb2sscjdrc12okn1d
+          run: |
+            sudo docker login --username ouath --password $YANDEX_KEY cr.yandex 
+            sudo docker pull cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
+            sudo docker images
+            sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
