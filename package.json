@@ -1,6 +1,6 @@
 {
   "name": "infra-hw",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "scripts": {
     "updcl": "release-it",
     "start": "nodemon ./src/server/index.ts",
