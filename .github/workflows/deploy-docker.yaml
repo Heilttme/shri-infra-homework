@@ -23,9 +23,8 @@ jobs:
         env:
           CR_REGISTRY: crpkb2sscjdrc12okn1d
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_TAG: ${{ github.run_number }}
         run: |
-          docker build -t cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG .
-          docker build -t cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG_latest .
-          docker push cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
-          docker push cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG_latest
+          docker build -t cr.yandex/$CR_REGISTRY/app:${{ github.run_number }} .
+          docker build -t cr.yandex/$CR_REGISTRY/app:${{ github.run_number }}_latest .
+          docker push cr.yandex/$CR_REGISTRY/app:${{ github.run_number }}
+          docker push cr.yandex/$CR_REGISTRY/app:${{ github.run_number }}_latest
