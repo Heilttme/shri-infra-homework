@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: ["Create Release"]
     types:
-      - requested
+      - completed
 
 jobs:
   build:
@@ -19,12 +19,24 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.AUTHORIZED_KEY }} 
 
+      - name: Set up GitHub CLI
+        uses: cli/cli-action@v2
+        with:
+          version: latest
+
+      - name: Get Latest Release
+        id: get_release
+        run: |
+          latest_release=$(gh release view --json name -q ".name")
+          echo "Latest release name: $latest_release"
+          echo "LATEST_RELEASE_NAME=$latest_release" >> $GITHUB_ENV
+
       - name: Build docker image
         env:
           CR_REGISTRY: crpkb2sscjdrc12okn1d
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          docker build -t cr.yandex/$CR_REGISTRY/app:${{ github.run_number }} .
-          docker build -t cr.yandex/$CR_REGISTRY/app:${{ github.run_number }}_latest .
-          docker push cr.yandex/$CR_REGISTRY/app:${{ github.run_number }}
-          docker push cr.yandex/$CR_REGISTRY/app:${{ github.run_number }}_latest
+          docker build -t cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME .
+          docker build -t cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME_latest .
+          docker push cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME
+          docker push cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME_latest

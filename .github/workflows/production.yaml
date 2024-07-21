@@ -8,7 +8,7 @@ on:
         required: false
 
 jobs:
-  build:
+  deploy-to-production:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +19,18 @@ jobs:
         uses: yc-actions/yc-cr-login@v1
         with:
           yc-sa-json-credentials: ${{ secrets.AUTHORIZED_KEY }} 
+      
+      - name: Set up GitHub CLI
+        uses: cli/cli-action@v2
+        with:
+          version: latest
+
+      - name: Get Latest Release
+        id: get_release
+        run: |
+          latest_release=$(gh release view --json name -q ".name")
+          echo "Latest release name: $latest_release"
+          echo "LATEST_RELEASE_NAME=$latest_release" >> $GITHUB_ENV
 
       - name: Connect via ssh and run Docker commands
         uses: appleboy/ssh-action@master
@@ -28,7 +40,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             export CR_REGISTRY=crpkb2sscjdrc12okn1d
-            export IMAGE_TAG=${{ github.run_number }}_latest
+            export IMAGE_TAG=$LATEST_RELEASE_NAME_latest
             echo "Logging into Docker registry"
             sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
             echo "Pulling Docker image cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG"
