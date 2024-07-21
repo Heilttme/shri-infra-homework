@@ -98,7 +98,7 @@ jobs:
         cr.yandex/crpkb2sscjdrc12okn1d/app:${{ github.run_number }}
         EOF
         )"
-        
+
     - name: Changelog update
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -109,3 +109,13 @@ jobs:
         git checkout main
         git pull origin main
         yes | head -n 3 | npm run updcl
+    
+    - name: Checkout release branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git fetch 
+        git checkout -b release/${{ github.run_number }}
+        git push origin release/${{ github.run_number }}
