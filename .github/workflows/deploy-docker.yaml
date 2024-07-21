@@ -42,5 +42,8 @@ jobs:
         run: |
           sudo docker login --username oauth --password $YANDEX_KEY cr.yandex
           sudo docker pull cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
-          sudo docker images
-          sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
+      - name: Run
+        env: 
+          IMAGE_TAG: ${{ github.sha }}
+          CR_REGISTRY: crpkb2sscjdrc12okn1d
+        run: sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
