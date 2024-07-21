@@ -38,15 +38,14 @@ jobs:
           CR_REGISTRY: crpkb2sscjdrc12okn1d
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Check if LATEST_RELEASE_NAME is set correctly
-          if [ -z "$LATEST_RELEASE_NAME" ]; then
-            echo "Error: LATEST_RELEASE_NAME is empty."
-            exit 1
-          fi
 
-          # Build and push Docker images
+          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
           docker build -t cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME .
+          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
           docker build -t cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME_latest .
+          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
           
           docker push cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME
+          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
           docker push cr.yandex/$CR_REGISTRY/app:$LATEST_RELEASE_NAME_latest
+          echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
