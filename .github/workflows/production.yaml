@@ -18,8 +18,8 @@ jobs:
         id: login-cr
         uses: yc-actions/yc-cr-login@v1
         with:
-          yc-sa-json-credentials: ${{ secrets.AUTHORIZED_KEY }}
-
+          yc-sa-json-credentials: ${{ secrets.AUTHORIZED_KEY }} 
+      
       - name: Get Latest Release
         id: get_release
         env:
@@ -29,13 +29,6 @@ jobs:
           echo "Latest release name: $latest_release"
           echo "LATEST_RELEASE_NAME=$latest_release" >> $GITHUB_ENV
 
-      - name: Create Environment File
-        id: create_env_file
-        run: |
-          echo "LATEST_RELEASE_NAME=${{ env.LATEST_RELEASE_NAME }}" > .env
-          echo "CR_REGISTRY=crpkb2sscjdrc12okn1d" >> .env
-          cat .env
-
       - name: Connect via ssh and run Docker commands
         uses: appleboy/ssh-action@master
         with:
@@ -43,8 +36,8 @@ jobs:
           username: heilttme
           key: ${{ secrets.KEY }}
           script: |
-            echo "Loading environment variables"
-            source .env
+            export CR_REGISTRY=crpkb2sscjdrc12okn1d
+            echo "LATEST_RELEASE_NAME: $LATEST_RELEASE_NAME"
             export IMAGE_TAG="${LATEST_RELEASE_NAME}_latest"
             echo "Logging into Docker registry"
             sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
@@ -58,6 +51,6 @@ jobs:
             sudo docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/app:$IMAGE_TAG
             sleep 10
             echo "Checking running containers"
-            sudo docker ps -a
+            sudo docker ps -a 
             echo "Fetching logs of the last started container"
             sudo docker logs $(sudo docker ps -l -q)  # Print logs of the last started container
