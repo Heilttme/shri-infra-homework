@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm i
-RUN npm install webpack --save-dev
+#RUN npm install webpack --save-dev
 
 COPY . .
 

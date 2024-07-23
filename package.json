@@ -8,7 +8,7 @@
     "watch": "webpack --watch",
     "test": "jest",
     "lint": "eslint ./src",
-    "build:docker": "docker build -t shri-infra .",
+    "build:docker": "docker build -t heilttme/test .",
     "start:docker": "docker run -d -p 3000:3000 heilttme/test",
     "prepare": "husky"
   },
